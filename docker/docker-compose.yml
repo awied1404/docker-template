@@ -1,0 +1,28 @@
+version: "2.4"
+
+services:
+  service_name:
+    hostname: host
+    build: 
+      context: .
+      dockerfile: ./Dockerfile
+    privileged: true
+    runtime: ${DOCKER_RUNTIME}
+    environment:
+      # Pass host user information.
+      - HOST_USER=${USER}
+      - HOST_UID=1000
+      - HOST_GID=1000
+      # Display X Server GUI.
+      - DISPLAY
+      - QT_X11_NO_MITSHM=1
+    volumes:
+      - /home/andreas/.Xauthority:/home/andi/.Xauthority
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /dev/:/dev/
+      - ./keep-running.bash:/home/andi/keep-running.bash
+      - ./default_bash_rc:/home/andi/.bashrc
+      - ../sample_directory:/home/andi/test
+    network_mode: host
+    command: /home/andi/keep-running.bash
+
